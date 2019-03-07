@@ -1,11 +1,7 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class Actor {
 
   private String id;
   private String name;
-  private Map<Integer, Movie> moviesPlayed = new HashMap<>();
 
 
   public Actor(String id, String name) {
@@ -48,10 +44,6 @@ public class Actor {
   @Override
   public String toString() {
     return "Actor [id=" + id + ", name=" + name + "]";
-  }
-
-  public void addMovie(Movie movie) {
-    moviesPlayed.put(movie.getId(), movie);
   }
 
 

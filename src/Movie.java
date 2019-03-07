@@ -1,9 +1,5 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class Movie {
   private static int idMovie = 1;
-  private Map<String, Actor> actors = new HashMap<String, Actor>();
   private String name;
   private String year;
   private int id;
@@ -29,9 +25,6 @@ public class Movie {
     return id;
   }
 
-  public boolean isActorPresent(String actorId) {
-    return actors.containsKey(actorId);
-  }
 
   @Override
   public int hashCode() {
@@ -57,10 +50,6 @@ public class Movie {
 
   public void setYear(String year) {
     this.year = year;
-  }
-
-  public void addActor(Actor actor) {
-    actors.put(actor.getId(), actor);
   }
 
 

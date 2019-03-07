@@ -8,11 +8,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SAXHandler extends DefaultHandler {
 
-  private List<Movie> movies = new ArrayList<>();
-  private Map<String, Actor> actors = new HashMap<>();
+  private Map<Movie, List<Actor>> moviesActors = new HashMap<>();// film --> acteur
+  private Map<Actor, List<Movie>> actorsMovies = new HashMap<>();// actor --> film joué
+  // nom-->acteur
+  // id acteur
 
-  // actor --> film joué (??)
-  // film --> acteur (??)
 
   private boolean bMovie;
   private Movie currentMovie;
@@ -24,16 +24,18 @@ public class SAXHandler extends DefaultHandler {
     if (qName.equalsIgnoreCase("actor")) {
       String id = attributes.getValue("id");
       String name = attributes.getValue("name");
-      actors.put(id, new Actor(id, name));
+      actorsMovies.put(new Actor(id, name), new ArrayList<>());
     }
 
     if (qName.equalsIgnoreCase("movie")) {
       bMovie = true;
-
       currentMovie = new Movie();
       currentMovie.setYear(attributes.getValue("year"));
+      moviesActors.put(currentMovie, new ArrayList<>());
       for (String a : attributes.getValue("actors").split(" ")) {
-        currentMovie.addActor(actors.get(a));
+        Actor act = new Actor(a, "");
+        moviesActors.get(currentMovie).add(act);
+        actorsMovies.get(act).add(currentMovie);
       }
     }
 
@@ -53,7 +55,6 @@ public class SAXHandler extends DefaultHandler {
   @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
     if (bMovie) {
-      movies.add(currentMovie);
       bMovie = false;
     }
   }
@@ -70,8 +71,8 @@ public class SAXHandler extends DefaultHandler {
 
   @Override
   public void endDocument() {
-    System.out.println(actors.size());
-    System.out.println(this.movies.size());
+    System.out.println(actorsMovies.size());
+    System.out.println(moviesActors.size());
   }
 
 }

@@ -6,7 +6,7 @@ public class Graph {
    * 
    * @param actorSrc The source actor
    * @param actorDest The destination actor
-   * @param file the file to parse
+   * @param file output file
    */
   public void calculerCheminLePlusCourt(String actorSrc, String actorDest, String file) {
 
@@ -17,7 +17,7 @@ public class Graph {
    * 
    * @param actorSrc The source actor
    * @param actorDest The destination actor
-   * @param file the file to parse
+   * @param file output files
    */
   public void calculerCheminCoutMinimum(String actorSrc, String actorDest, String file) {
 

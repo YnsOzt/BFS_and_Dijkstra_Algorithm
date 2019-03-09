@@ -5,11 +5,13 @@
 			<xs:pattern value="a[0-9]*" />
 		</xs:restriction>
 	</xs:simpleType>
+	
 	<xs:simpleType name="year">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[0-9]{4}" />
 		</xs:restriction>
 	</xs:simpleType>
+	
 	<xs:element name="movies">
 		<xs:complexType>
 			<xs:sequence>

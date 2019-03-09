@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Actor SYSTEM "movies.dtd" >
+<movies>
+  <actor id="a1" name="Darryl M. Bell"/>
+  <actor id="a2" name="Linda McGuire"/>
+  <actor id="a3" name="John Colton(II)"/>
+  <actor id="a4" name="Chase Ryan Jeffery"/>
+  <movie actors = "a1 a4" year="1980">'Breaker' Morant</movie>
+<movie actors=" a2 a3" year="2019"> Coucou le quebec </movie>
+</movies>

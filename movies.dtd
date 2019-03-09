@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT movies (actor+, movie+)>
+<!ELEMENT actor EMPTY>
+<!ATTLIST actor id CDATA #REQUIRED>
+<!ATTLIST actor name CDATA #REQUIRED>
+<!ELEMENT movie (#PCDATA)>
+<!ATTLIST movie year CDATA #IMPLIED>
+<!ATTLIST movie actors CDATA #REQUIRED>

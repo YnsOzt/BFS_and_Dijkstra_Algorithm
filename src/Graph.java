@@ -34,6 +34,7 @@ public class Graph {
     Actor actDest = nameActor.get(actorDest);
 
     Map<Actor, Actor> actorLinks = new HashMap<>();// destination --> source
+    Map<Actor, Map<Actor, Movie>> actorMovieLinks = new HashMap<>();
 
     Set<Actor> alreadyCheckedActor = new HashSet<>(); // acteur déjà vérifié
 
@@ -49,6 +50,11 @@ public class Graph {
         for (Actor a : movieActors.get(m)) {
           if (!alreadyCheckedActor.contains(a)) {
 
+            // ajoute le film en relation avec les deux acteurs
+            Map<Actor, Movie> mapTemp = new HashMap<>();
+            mapTemp.put(currentActor, m);
+            actorMovieLinks.put(a, mapTemp);
+
             if (a.equals(actDest)) { // si on a trouvé la destination
               Deque<Actor> resultHistory = new ArrayDeque<>();
 
@@ -60,7 +66,16 @@ public class Graph {
                 temp = actorLinks.get(temp);// "bond" en arrière
                 resultHistory.push(temp);
               }
-              System.out.println(resultHistory.toString().replaceAll(",", " -->"));
+
+              Actor pastActor = null;
+              for (Actor actor : resultHistory) {
+                if (pastActor != null) {
+                  System.out.println(pastActor + " --> " + actor + " IN "
+                      + actorMovieLinks.get(actor).get(pastActor));
+                }
+                pastActor = actor;
+              }
+
               return;
 
             } else {

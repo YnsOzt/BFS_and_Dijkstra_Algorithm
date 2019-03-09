@@ -8,14 +8,15 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SAXHandler extends DefaultHandler {
 
-  private Map<Movie, List<Actor>> moviesActors = new HashMap<>();// film --> acteur
-  private Map<Actor, List<Movie>> actorsMovies = new HashMap<>();// actor --> film joué
-  // nom-->acteur
-  // id acteur
-
+  private Map<Movie, List<Actor>> movieActors = new HashMap<>();// film --> acteur
+  private Map<Actor, List<Movie>> actorMovies = new HashMap<>();// actor --> film joué
+  private Map<String, Actor> nameActor = new HashMap<>();// nomActeur-->acteur
+  private Map<String, Actor> idActor = new HashMap<>();
 
   private boolean bMovie;
   private Movie currentMovie;
+
+  private Graph graph;
 
 
   @Override
@@ -24,18 +25,21 @@ public class SAXHandler extends DefaultHandler {
     if (qName.equalsIgnoreCase("actor")) {
       String id = attributes.getValue("id");
       String name = attributes.getValue("name");
-      actorsMovies.put(new Actor(id, name), new ArrayList<>());
+      Actor act = new Actor(id, name);
+      actorMovies.put(act, new ArrayList<>());
+      nameActor.put(name, act);
+      idActor.put(id, act);
     }
 
     if (qName.equalsIgnoreCase("movie")) {
       bMovie = true;
       currentMovie = new Movie();
       currentMovie.setYear(attributes.getValue("year"));
-      moviesActors.put(currentMovie, new ArrayList<>());
+      movieActors.put(currentMovie, new ArrayList<>());
       for (String a : attributes.getValue("actors").split(" ")) {
-        Actor act = new Actor(a, "");
-        moviesActors.get(currentMovie).add(act);
-        actorsMovies.get(act).add(currentMovie);
+        Actor act = idActor.get(a);
+        movieActors.get(currentMovie).add(act);
+        actorMovies.get(act).add(currentMovie);
       }
     }
 
@@ -66,13 +70,12 @@ public class SAXHandler extends DefaultHandler {
    * @return a graph build by the handler
    */
   public Graph getGraph() {
-    return null;
+    return graph;
   }
 
   @Override
   public void endDocument() {
-    System.out.println(actorsMovies.size());
-    System.out.println(moviesActors.size());
+    graph = new Graph(movieActors, actorMovies, nameActor);
   }
 
 }

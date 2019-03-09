@@ -52,6 +52,10 @@ public class Movie {
     this.year = year;
   }
 
+  @Override
+  public String toString() {
+    return name;
+  }
 
 
 }

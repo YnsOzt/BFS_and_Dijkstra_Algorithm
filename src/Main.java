@@ -12,11 +12,9 @@ public class Main {
       SAXHandler userhandler = new SAXHandler();
       saxParser.parse(inputFile, userhandler);
       Graph g = userhandler.getGraph();
-      g.calculerCheminLePlusCourt("Macaulay Culkin", "Guillaume Canet", "output.xml");
-      long endTime = System.currentTimeMillis();// TIME
-      long elapsedTime = endTime - startTime; // TIME
-      System.out.println(elapsedTime + " ms FOR calculerCheminLePlusCourt"); // TIME
+      // g.calculerCheminLePlusCourt("Macaulay Culkin", "Guillaume Canet", "output.xml");
       g.calculerCheminCoutMinimum("Macaulay Culkin", "Guillaume Canet", "output2.xml");
+      System.out.println((System.currentTimeMillis() - startTime) + " ms FOR DIJKSTRA"); // TIME
     } catch (Exception e) {
       e.printStackTrace();
     }

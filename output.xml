@@ -1,10 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<path cost="149" nbMovies="3">
-<actor>Macaulay Culkin</actor>
-<movie name="Home Alone" year="1990"/>
-<actor>Roberts Blossom</actor>
-<movie name="Quick and the Dead, The" year="1995"/>
-<actor>Leonardo DiCaprio</actor>
-<movie name="Beach, The" year="2000"/>
-<actor>Guillaume Canet</actor>
-</path>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><path cost="149" nbMovies="3"><actor>Macaulay Culkin</actor><movie name="Home Alone" year="1990"/><actor>Roberts Blossom</actor><movie name="Quick and the Dead, The" year="1995"/><actor>Leonardo DiCaprio</actor><movie name="Beach, The" year="2000"/><actor>Guillaume Canet</actor></path>

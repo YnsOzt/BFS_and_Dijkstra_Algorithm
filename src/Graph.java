@@ -41,10 +41,10 @@ public class Graph {
    */
   public void calculerCheminLePlusCourt(String actorSrc, String actorDest, String file)
       throws CheminImpossibleException {
-    Deque<PairActorMovie> shortestPath =
-        calculerDistance(nameActor.get(actorSrc), nameActor.get(actorDest));
-
+    long startTime = System.currentTimeMillis();// TIME
+    Deque<PairActorMovie> shortestPath = bfs(nameActor.get(actorSrc), nameActor.get(actorDest));
     writeXMLFile(file, shortestPath);
+    System.out.println((System.currentTimeMillis() - startTime) + " ms FOR BFS"); // TIME
   }
 
 
@@ -55,8 +55,7 @@ public class Graph {
    * @return The shortest path computed via BFS
    * @throws CheminImpossibleException
    */
-  private Deque<PairActorMovie> calculerDistance(Actor actSrc, Actor actDest)
-      throws CheminImpossibleException {
+  private Deque<PairActorMovie> bfs(Actor actSrc, Actor actDest) throws CheminImpossibleException {
 
     Map<Actor, PairActorMovie> actorMovieLinks = new HashMap<>(); // dest --> src
     Set<Actor> alreadyCheckedActor = new HashSet<>(); // acteur déjà vérifié
@@ -87,6 +86,72 @@ public class Graph {
     throw new CheminImpossibleException();
   }
 
+
+
+  /**
+   * method that calculate the lowest cost path (via Dijkstra)
+   * 
+   * @param actorSrc The source actor
+   * @param actorDest The destination actor
+   * @param file output files
+   * @throws CheminImpossibleException
+   */
+  public void calculerCheminCoutMinimum(String actorSrc, String actorDest, String file)
+      throws CheminImpossibleException {
+    long startTime = System.currentTimeMillis();// TIME
+    Deque<PairActorMovie> shortestPath =
+        dijkstra(nameActor.get(actorSrc), nameActor.get(actorDest));
+    writeXMLFile(file, shortestPath);
+    System.out.println((System.currentTimeMillis() - startTime) + " ms FOR Dijkstra"); // TIME
+  }
+
+  /**
+   * 
+   * @param actSrc the source actor
+   * @param actDest the destination actor
+   * @return The shortest path computed via Dijkstra
+   * @throws CheminImpossibleException
+   */
+  public Deque<PairActorMovie> dijkstra(Actor actSrc, Actor actDest)
+      throws CheminImpossibleException {
+    SortedSet<Actor> intermediaryLinks = new TreeSet<>();
+    Map<Actor, PairActorMovie> actorMovieLinks = new HashMap<>(); // dest --> src
+
+    for (Actor a : nameActor.values()) {
+      if (a.equals(actSrc)) {
+        a.setCost(0);
+      } else {
+        a.setCost(Integer.MAX_VALUE);
+      }
+      intermediaryLinks.add(a);
+    }
+
+    Actor currentActor;
+    while (!intermediaryLinks.isEmpty()) {
+      currentActor = intermediaryLinks.first();
+      intermediaryLinks.remove(currentActor);
+      for (Movie m : actorMovies.get(currentActor)) {
+        // nb of actors in the movie + cost of currentActor
+        int cost = movieActors.get(m).size() + currentActor.getCost();
+        for (Actor a : movieActors.get(m)) {
+          if (a.getCost() > cost) { // if actor has better cost
+            intermediaryLinks.remove(a);
+            a.setCost(cost);
+            intermediaryLinks.add(a);
+            if (!a.equals(currentActor)) {
+              PairActorMovie pair = new PairActorMovie(currentActor, m);
+              actorMovieLinks.put(a, pair);
+            }
+          }
+        }
+      }
+      if (currentActor.equals(actDest)) {
+        return extractShortestPath(actSrc, actDest, actorMovieLinks);
+      }
+    }
+    throw new CheminImpossibleException();
+  }
+
   /**
    * Method that extract the shortestPath from a map of pair and put it in a stack.
    * 
@@ -107,68 +172,6 @@ public class Graph {
     }
     return shortestPath;
   }
-
-
-  /**
-   * method that calculate the lowest cost path (via Dijkstra)
-   * 
-   * @param actorSrc The source actor
-   * @param actorDest The destination actor
-   * @param file output files
-   * @throws CheminImpossibleException
-   */
-  public void calculerCheminCoutMinimum(String actorSrc, String actorDest, String file)
-      throws CheminImpossibleException {
-    calculerCout(nameActor.get(actorSrc), nameActor.get(actorDest));
-  }
-
-  /**
-   * 
-   * @param actSrc the source actor
-   * @param actDest the destination actor
-   * @return The shortest path computed via Dijkstra
-   * @throws CheminImpossibleException
-   */
-  public Deque<PairActorMovie> calculerCout(Actor actSrc, Actor actDest)
-      throws CheminImpossibleException {
-
-    Map<Actor, Integer> finalLinks = new HashMap<>();
-    SortedSet<Actor> intermediaryLinks = new TreeSet<>();
-
-    intermediaryLinks.add(actSrc);
-
-    Actor currentActor;
-    while (!intermediaryLinks.isEmpty()) {
-      currentActor = intermediaryLinks.first();
-      intermediaryLinks.remove(currentActor);
-      finalLinks.put(currentActor, currentActor.getCost());
-      for (Movie m : actorMovies.get(currentActor)) {
-        // nb of actors in the movie + cost of currentActor
-        int cost = movieActors.get(m).size() + currentActor.getCost();
-        for (Actor a : movieActors.get(m)) {
-          if (!finalLinks.containsKey(a)) { // if the actor has alreay a finalCost
-            if (!intermediaryLinks.contains(a)) {// if the actors is not in the
-                                                 // intermediaryLinks yet
-              a.setCost(cost);
-              intermediaryLinks.add(a);
-            } else if (a.getCost() > cost) { // if a in intermediaryLinks && better cost
-              intermediaryLinks.remove(a);
-              a.setCost(cost);
-              intermediaryLinks.add(a);
-            }
-          }
-        }
-      }
-    }
-
-    if (finalLinks.containsKey(actDest)) {
-      System.out.println(finalLinks.get(actDest));
-    } else {
-      throw new CheminImpossibleException();
-    }
-    return null;
-  }
-
 
   /**
    * method that write a path in an xml file
